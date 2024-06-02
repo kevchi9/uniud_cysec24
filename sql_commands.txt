@@ -1,0 +1,35 @@
+CREATE TABLE users (
+username varchar(20) NOT NULL PRIMARY KEY,
+pswd varchar(255) NOT NULL
+);
+
+
+CREATE or REPLACE FUNCTION verify(user_name varchar(20), pswd varchar(255))
+RETURNS int 
+as
+$$
+DECLARE
+verified int;
+BEGIN
+select 1 into verified from users where username=user and pswd=crypt(pswd,password);
+return coalesce(verified, 0);
+END;
+$$
+language plpgsql;
+
+
+
+CREATE or REPLACE FUNCTION does_exists(user_name varchar(20))
+RETURNS int
+language plpgsql
+as 
+$$
+DECLARE
+exists int;
+BEGIN
+SELECT 1 into exists FROM users WHERE username=user_name;
+return coalesce(exists, 0);
+END;
+$$;
+
+
