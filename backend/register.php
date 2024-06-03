@@ -1,5 +1,4 @@
 <?php
-
 $registered = false;
 if(isset($_POST['register']) && $_POST['register']=="Register"){
     
@@ -21,8 +20,14 @@ if(isset($_POST['register']) && $_POST['register']=="Register"){
     if($registered) {
         echo "<p style='color:red'>Username already picked.</p>";
     } else {
+        // $pkey = file_get_contents('php://input');
+        $pkey = json_decode($_POST['json_key']);
+        // echo "<p style='color:red'>".$pkey->n."</p>";
         $query = "insert into users(username, pswd) values($1, crypt($2, gen_salt('md5')));";
         pg_query_params($conn, $query, array($username, $pwd));
+        $query = "insert into pkey(username, pkey) values($1, $2);";
+        pg_query_params($conn, $query, array($username, $pkey->n));
+
         echo "<p style='color:Green'>User successfully registered.</p>";
         echo "<p>Use the submitted credentials to log in.</p>";
     }

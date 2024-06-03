@@ -1,3 +1,8 @@
+html {
+    height: 100%;
+    width: 100%;
+}
+
 body {
     background-color: rgb(131, 172, 177);
     display: inline-block;
@@ -22,8 +27,9 @@ form {
     margin-top: 15px;
     border-radius: 25px;
     border: 15px;
+    border-color: black;
     height: 30px;
-    width: 70%;
+    width: 65%;
     text-align: center;
 }
 
@@ -91,7 +97,7 @@ input {
     background-color: rgb(191, 206, 209);
 }
 
-#inbox_table {
+.content_table {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     border: none;
     border-radius: 20px;

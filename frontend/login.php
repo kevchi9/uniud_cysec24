@@ -4,6 +4,8 @@
 <head>
     <title>Project Domain - Login</title>
     <link rel="stylesheet" href="../style.css">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../js/register_rsa.js"></script>
 </head>
 
 <?php
@@ -21,5 +23,7 @@ include '../backend/register.php';
     </form>
 
 </body>
+<script> console.log(localStorage.privateKey) </script>
+<script type="text/javascript" src="../js/register_rsa.js"></script>
 
 </html>
