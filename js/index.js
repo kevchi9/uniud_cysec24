@@ -1,8 +1,8 @@
 // event listener for clicking on Send
 document.getElementById("send_button").onclick = function () {
-    location.href = "send.php"
+    location.href = "search_user.php";
 }
 
 document.getElementById("inbox_button").onclick = function () {
-    location.href = "inbox.html"
+    location.href = "inbox.html";
 }

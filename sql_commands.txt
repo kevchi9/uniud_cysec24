@@ -11,10 +11,11 @@ CONSTRAINT foreign_pkey_key FOREIGN KEY (user) REFERENCES users(username) ON DEL
 );
 
 
-CREATE TABLE files (
-file_id varchar(30) NOT NULL,
-file_path varchar(100) NOT NULL,
-CONSTRAINT files_primary_key PRIMARY KEY (file_path)
+CREATE TABLE encrypted_files (
+id SERIAL PRIMARY KEY,
+encrypted_data TEXT NOT NULL,
+encrypted_key TEXT NOT NULL,
+uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -23,7 +24,7 @@ username varchar(20) NOT NULL,
 file varchar(100) NOT NULL, 
 CONSTRAINT own_file_primary_key PRIMARY KEY (username, file),
 CONSTRAINT foreign_user_key FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
-CONSTRAINT foreign_file_key FOREIGN KEY (file) REFERENCES files(file_path) ON DELETE CASCADE
+CONSTRAINT foreign_file_key FOREIGN KEY (file) REFERENCES encrypted_files(id) ON DELETE CASCADE
 );
 
 

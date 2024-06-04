@@ -14,6 +14,11 @@ if(isset($_POST['login']) && $_POST['login']=="Login"){
         $result = pg_fetch_object($res);
         if($result){
             $authenticated=$result->verify==1;
+            // TODO: autenticazione
+            ini_set("session.gc_maxlifetime", 3600); // 1 hour
+            ini_set("session.cookie_lifetime", 0); // expire on browser close
+            $_SESSION["username"] = "$username";
+            setcookie("session_data", base64_encode(json_encode($_SESSION)), time() + 3600, "/");
         }
     }
 
@@ -21,7 +26,7 @@ if(isset($_POST['login']) && $_POST['login']=="Login"){
         // header('location: login.php');
         echo "<p style='color:red'>Wrong credentials</p>";
     } else {
-        header('location: index.html');
+        header('location: index.php');
     }
 }
 ?>

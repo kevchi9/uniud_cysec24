@@ -113,11 +113,21 @@ input {
     margin-left: 5px;
     margin-right: 5px;
     background-color: aliceblue;
-    border: none;
+    border: 1px solid black;
     border-radius: 15px;
     width: 30%;
     min-width: 100px;
     transition: 0.1s;
+}
+
+.search_button {
+    margin-top: 15px;
+    border-radius: 25px;
+    border: 1px solid black;
+    height: 50px;
+    width: 35%;
+    text-align: center;
+    padding: 10px 10px;
 }
 
 #cancel_button {
@@ -126,6 +136,16 @@ input {
     min-width: 120px;
     padding: 1px 30px;
     font-size: 15px;
+    border: 1px solid black;
+}
+
+.form_button {
+    width: 30%;
+    height: 30px;
+    min-width: 120px;
+    padding: 1px 30px;
+    font-size: 15px;
+
 }
 
 .submit:hover {
