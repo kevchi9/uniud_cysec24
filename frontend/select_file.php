@@ -1,30 +1,40 @@
+<?php 
+session_start();
+    if(!isset($_SESSION['session_username'])) {
+        header('Location: ./login.php', true);
+    }
+?>
 <!DOCTYPE html>
 <html>
 
 <head>
     <title>Project Domain - Send</title>
     <link rel="stylesheet" href="../style.css">
-    <!-- DELETE THIS IF EMPTY -->
-    <link rel="stylesheet" href="../send.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 </head>
 
 <body>
-    <div id="send_head">
-    <?php
-    session_start();
-    if (isset($_GET['success']) && $_GET['success'] == 1) {
-        unset($_SESSION['upload_processed']);
-        echo "<p style='color:green'>File caricato con successo</p>";
+<?php
+if (isset($_GET['success'])) {
+    echo "<div id='notification_box'>";
+    if($_GET['success'] == 1) {
+        echo "<p id='notification' style='color:green'>File uploaded successfully</p>";
+    } else {
+        echo "<p id='notification' style='color:red'>Error in file upload</p>";
     }
-    ?>
-
-        <h1>Send an encrypted file</h1>
+    echo "</div>";
+}
+?>
+    <div id="header">
+        <h1 id="page_title">Choose a file to encrypt</h1>
+        <button id="logout_button"> Logout </button>
     </div>
     <form id="send_form" method="POST" enctype="multipart/form-data" action="../backend/upload.php">
-        <p><?php echo "Select a file to send to "; ?></p>
+        <p>Select a file to encrypt and send to</p>
         <p><?php echo $_SESSION['username']; ?> </p>
-         
+        <input type="file" id="upload" name="upload">
+        <input class="submit" type="submit" id="send" name="send" value="Send">
+        <button type="button" id="cancel_button"> Cancel </button>
         <?php 
         $_SESSION['serialized_key'] = serialize($_SESSION['recipient_pkey']);
         $session_value=(isset($_SESSION['serialized_key']))?$_SESSION['serialized_key']:''; 
@@ -48,15 +58,12 @@
             .catch(function(error) {
                 console.error("Errore durante la creazione della CryptoKey:", error);
             });
-
         </script>
-
-        <input type="file" id="upload" name="upload">
-        <input class="submit" type="submit" id="send" name="send" value="Send">
-        <button type="button" id="cancel_button"> Cancel </button>
     </form>
 </body>
 
 <script type="text/javascript" src="../js/send.js"></script>
+<script type="text/javascript" src="../js/notification.js"></script>
+<script type="text/javascript" src="../js/logout.js"></script>
 
 </html>

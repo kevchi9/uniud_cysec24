@@ -1,6 +1,7 @@
 <?php
-
+session_start();
 $authenticated = false;
+
 if(isset($_POST['login']) && $_POST['login']=="Login"){
     
     $username = $_POST['username'];
@@ -14,11 +15,10 @@ if(isset($_POST['login']) && $_POST['login']=="Login"){
         $result = pg_fetch_object($res);
         if($result){
             $authenticated=$result->verify==1;
-            // TODO: autenticazione
-            ini_set("session.gc_maxlifetime", 3600); // 1 hour
-            ini_set("session.cookie_lifetime", 0); // expire on browser close
-            $_SESSION["username"] = "$username";
-            setcookie("session_data", base64_encode(json_encode($_SESSION)), time() + 3600, "/");
+            
+            if ($authenticated) {
+                $_SESSION["session_username"] = $username;
+            }
         }
     }
 

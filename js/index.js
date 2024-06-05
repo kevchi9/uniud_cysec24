@@ -4,5 +4,5 @@ document.getElementById("send_button").onclick = function () {
 }
 
 document.getElementById("inbox_button").onclick = function () {
-    location.href = "inbox.html";
+    location.href = "inbox.php";
 }

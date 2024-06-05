@@ -15,7 +15,8 @@ CREATE TABLE encrypted_files (
 id SERIAL PRIMARY KEY,
 encrypted_data TEXT NOT NULL,
 encrypted_key TEXT NOT NULL,
-uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+file_type TEXT NOT NULL
 );
 
 

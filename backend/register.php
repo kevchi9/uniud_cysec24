@@ -14,7 +14,7 @@ if(isset($_POST['register']) && $_POST['register']=="Register"){
         $query = "select * from does_exist($1)";
         $res = pg_query_params($conn, $query, array($username));
         $result = pg_fetch_object($res);
-
+        
         if($result){
             $registered=$result->does_exist!=0;
         }
@@ -34,7 +34,9 @@ if(isset($_POST['register']) && $_POST['register']=="Register"){
             if(pg_query_params($conn, $query2, array($username, $pkey))){
                 pg_query($conn, "COMMIT;");
                 $_SESSION['registered'] = true;
-                header('location: login.php');
+                // sends data to client about the successful registration
+                $_SESSION['username'] = $username;
+                header('location: login.php?registered=true&username=' . $username);
             } else {
                 pg_query($conn, "ROLLBACK;");
                 echo "<p style='color:red'>Operation failed.</p>";

@@ -43,31 +43,6 @@ async function exportKeyToJWK(key) {
 
 })()
 
-document.addEventListener('DOMContentLoaded', (event) => {
-    // Seleziona il pulsante di registrazione
-    var registerButton = document.getElementById('register');
-
-    // Aggiungi un listener per il click
-    registerButton.addEventListener('click', function () {
-        // Salva la variabile "registered" nel sessionStorage
-        sessionStorage.setItem('registered', 'true');
-        transferSessionToLocalStorage();
-    });
-});
-
 document.getElementById("login_button").onclick = function () {
     location.href = "login.php";
-}
-
-
-function transferSessionToLocalStorage() {
-    if (sessionStorage.getItem('registered') === 'true') {
-        let len = 0;
-        if (localStorage.length !== 0) {
-            len = localStorage.length;
-        }
-        localStorage.setItem('privateKey' + len, sessionStorage.getItem('privateKey'));
-        localStorage.setItem('publicKey' + len, sessionStorage.getItem('publicKey'));
-        sessionStorage.setItem('registered', 'false');
-    }
 }

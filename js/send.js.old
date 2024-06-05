@@ -11,6 +11,8 @@ function include(file) {
 
 include("https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js");
 include("https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js");
+include("https://cdnjs.cloudflare.com/ajax/libs/pngjs/5.0.0/png.js");
+
 
 // gets username
 var user;
@@ -23,7 +25,7 @@ $.ajax({
     }
 });
 
-async function uploadEncryptedData(encryptedData, encryptedKey, fileType) {
+async function uploadEncryptedData(encryptedData, encryptedKey) {
     let response = await fetch('/backend/upload.php', {
         method: 'POST',
         headers: {
@@ -31,8 +33,7 @@ async function uploadEncryptedData(encryptedData, encryptedKey, fileType) {
         },
         body: JSON.stringify({
             encryptedData: encryptedData,
-            encryptedKey: encryptedKey,
-            fileType: fileType // Aggiungi il tipo di file al payload
+            encryptedKey: encryptedKey
         })
     });
 
@@ -53,39 +54,14 @@ function arrayBufferToBase64(buffer) {
     return window.btoa(binary);
 }
 
-async function generateAESKey() {
-    return await window.crypto.subtle.generateKey(
-        {
-            name: "AES-GCM",
-            length: 256,
-        },
-        true,
-        ["encrypt", "decrypt"]
-    );
-}
-
-async function encryptAES(data, key) {
-    let encryptedData = await window.crypto.subtle.encrypt(
-        {
-            name: "AES-GCM",
-            iv: crypto.getRandomValues(new Uint8Array(12)), // Genera un vettore di inizializzazione casuale
-        },
-        key,
-        data
-    );
-    return encryptedData;
-}
-
-async function encryptRSA(data, publicKey) {
-    let encodedData = getMessageEncoding(data);
-    let encryptedData = await window.crypto.subtle.encrypt(
+async function encryptMessage(publicKey, encoded) {
+    return await window.crypto.subtle.encrypt(
         {
             name: "RSA-OAEP",
         },
         publicKey,
-        encodedData
+        encoded,
     );
-    return encryptedData;
 }
 
 function getMessageEncoding(data) {
@@ -102,7 +78,7 @@ function readFileAsync(file) {
         reader.onerror = function (error) {
             reject(error);
         };
-        reader.readAsArrayBuffer(file); // Leggi come un array di byte (buffer)
+        reader.readAsText(file);
     });
 }
 
@@ -114,22 +90,24 @@ async function handleFileUpload(e) {
         try {
             // Encrypt file here
             var file_content = await readFileAsync(file);
+            console.log("data: " + file_content);
 
-            // Generate random AES key
-            let AES_key = await generateAESKey(); // 32-byte key for AES-256
-            var encrypted_data = await encryptAES(file_content, AES_key);
+            // Get random AES key
+            let AES_key = Math.random().toString(36).slice(2);
+            // console.log("key: " + AES_key);
 
-            let aesKeyData = await window.crypto.subtle.exportKey("jwk", AES_key);
-            let aesKeyJson = JSON.stringify(aesKeyData);
-            let encoded_key = getMessageEncoding(aesKeyJson);
-
+            // Encrypt data with AES key
+            var encrypted_data = CryptoJS.AES.encrypt(file_content, AES_key).toString();
+            // console.log("encrypted data: " + encrypted_data);
 
             // Encrypt AES key with user public key
-            let encrypted_key = await encryptRSA(encoded_key, pkey);
-            let buffer_key = arrayBufferToBase64(encrypted_key);
+            let encoded_key = getMessageEncoding(AES_key);
+            let res = await encryptMessage(pkey, encoded_key);
+            let encrypted_key = arrayBufferToBase64(res);
+            // console.log("encrypted key: " + encrypted_key);
 
             // Upload encrypted data to server
-            await uploadEncryptedData(encrypted_data, buffer_key, file.type);
+            await uploadEncryptedData(encrypted_data, encrypted_key);
             window.location.href = "select_file.php?success=1";
 
         } catch (err) {
@@ -138,14 +116,6 @@ async function handleFileUpload(e) {
         }
     }
 };
-
-var input = document.getElementById("send");
-input.addEventListener('click', handleFileUpload);
-
-document.getElementById("cancel_button").onclick = function () {
-    location.href = "search_user.php"
-}
-
 
 var input = document.getElementById("send");
 input.addEventListener('click', handleFileUpload);
