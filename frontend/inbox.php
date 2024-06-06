@@ -1,4 +1,5 @@
 <?php include '../backend/verify_session.php'; ?>
+
 <!DOCTYPE html>
 <html>
 
@@ -12,26 +13,50 @@
 <body>
 
 <div id="header">
+    <div id="session_header"></div>
     <h1 id="page_title">Inbox</h1>
-    <button id="logout_button"> Logout </button>
+    <div id="session_header">
+        <?php echo "<p id='session_banner'>"."Logged as: ".$_SESSION['session_username']."</p>";?>
+        <button id="logout_button" > Logout </button>
+    </div>
 </div>
+<div id="table_container">
     <div class="content_table" id="inbox_table">
         <?php include '../backend/fetch_files.php'; ?>
         <?php foreach ($files as $file): ?>
         <a href="#" class="download-link" 
-           data-encrypted-data="<?php echo $file['encrypted_data']; ?>" 
-           data-encrypted-key="<?php echo $file['encrypted_key']; ?>"
-           data-file-type="<?php echo $file['file_type']; ?>">
-           File <?php echo $file['id']; ?>
+            data-encrypted-data="<?php echo $file['encrypted_data']; ?>" 
+            data-encrypted-key="<?php echo $file['encrypted_key']; ?>"
+            data-file-type="<?php echo $file['file_type']; ?>">
+            <?php echo $file['file_name'] . " - " . substr($file['uploaded_at'], 0, 19); ?>
         </a><br>
         <?php endforeach; ?>
-
     </div>
     <button id="cancel_button"> Cancel </button>
+</div>
 </body>
 
 <script type="text/javascript" src="../js/inbox.js"></script>
 <script>
+function base64ToArrayBuffer(base64String) {
+    let binaryString = window.atob(base64String);
+    let byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        byteArray[i] = binaryString.charCodeAt(i);
+    }
+    return byteArray;
+}
+
+async function decryptMessage(privateKey, encrypted) {
+    return await window.crypto.subtle.decrypt(
+        {
+            name: "RSA-OAEP",
+        },
+        privateKey,
+        encrypted,
+    );
+}
+
 async function downloadFile(encryptedData, encryptedKey) {
     let privateKey;
     try {
@@ -60,23 +85,13 @@ async function downloadFile(encryptedData, encryptedKey) {
             return;
         }
 
-        console.log(privateKey);
-        let priv = await crypto.subtle.exportKey('jwk', privateKey);
-        console.log(JSON.stringify(priv));
-        // Decode the base64 encrypted key
-        let encryptedKeyBuffer = Uint8Array.from(atob(encryptedKey), c => c.charCodeAt(0));
+        // decrypt AES key
+        let decodedKey = base64ToArrayBuffer(encryptedKey);
+        let decryptedKeyBuffer = await decryptMessage(privateKey, decodedKey);
+        let decryptedKey = new TextDecoder().decode(decryptedKeyBuffer);
 
-        // Decrypt the AES key with the private RSA key
-        let decryptedKeyBuffer = await window.crypto.subtle.decrypt(
-            { name: 'RSA-OAEP' },
-            privateKey,
-            encryptedKeyBuffer
-        );
-
-        let AESKey = new TextDecoder().decode(decryptedKeyBuffer);
-
-        // Decrypt the file data with the AES key
-        let decryptedData = CryptoJS.AES.decrypt(encryptedData, AESKey).toString(CryptoJS.enc.Utf8);
+        // Decrypt the file data with the AES key atob(CryptoJS.AES.decrypt(encrypted_data, decryptedKey).toString(CryptoJS.enc.Utf8));
+        let decryptedData = atob(CryptoJS.AES.decrypt(encryptedData, decryptedKey).toString(CryptoJS.enc.Utf8));
         console.log('Decrypted Data:', decryptedData);
 
         // Create a blob and initiate the download
@@ -84,7 +99,7 @@ async function downloadFile(encryptedData, encryptedKey) {
         let url = URL.createObjectURL(blob);
         let a = document.createElement('a');
         a.href = url;
-        a.download = 'decrypted_file.txt';
+        a.download = "<?php echo $file['file_name']; ?>";
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

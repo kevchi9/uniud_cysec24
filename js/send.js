@@ -23,7 +23,7 @@ $.ajax({
     }
 });
 
-async function uploadEncryptedData(encryptedData, encryptedKey, fileType) {
+async function uploadEncryptedData(encryptedData, encryptedKey, fileType, fileName) {
     let response = await fetch('/backend/upload.php', {
         method: 'POST',
         headers: {
@@ -32,7 +32,8 @@ async function uploadEncryptedData(encryptedData, encryptedKey, fileType) {
         body: JSON.stringify({
             encryptedData: encryptedData,
             encryptedKey: encryptedKey,
-            fileType: fileType // Aggiungi il tipo di file al payload
+            fileType: fileType, // Aggiungi il tipo di file al payload
+            fileName: fileName
         })
     });
 
@@ -53,39 +54,33 @@ function arrayBufferToBase64(buffer) {
     return window.btoa(binary);
 }
 
-async function generateAESKey() {
-    return await window.crypto.subtle.generateKey(
-        {
-            name: "AES-GCM",
-            length: 256,
-        },
-        true,
-        ["encrypt", "decrypt"]
-    );
+function base64ToArrayBuffer(base64String) {
+    let binaryString = window.atob(base64String);
+    let byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        byteArray[i] = binaryString.charCodeAt(i);
+    }
+    return byteArray;
 }
 
-async function encryptAES(data, key) {
-    let encryptedData = await window.crypto.subtle.encrypt(
-        {
-            name: "AES-GCM",
-            iv: crypto.getRandomValues(new Uint8Array(12)), // Genera un vettore di inizializzazione casuale
-        },
-        key,
-        data
-    );
-    return encryptedData;
-}
-
-async function encryptRSA(data, publicKey) {
-    let encodedData = getMessageEncoding(data);
-    let encryptedData = await window.crypto.subtle.encrypt(
+async function encryptMessage(publicKey, encoded) {
+    return await window.crypto.subtle.encrypt(
         {
             name: "RSA-OAEP",
         },
         publicKey,
-        encodedData
+        encoded,
     );
-    return encryptedData;
+}
+
+async function decryptMessage(privateKey, encrypted) {
+    return await window.crypto.subtle.decrypt(
+        {
+            name: "RSA-OAEP",
+        },
+        privateKey,
+        encrypted,
+    );
 }
 
 function getMessageEncoding(data) {
@@ -102,50 +97,39 @@ function readFileAsync(file) {
         reader.onerror = function (error) {
             reject(error);
         };
-        reader.readAsArrayBuffer(file); // Leggi come un array di byte (buffer)
+        reader.readAsArrayBuffer(file);
     });
 }
 
 async function handleFileUpload(e) {
     e.preventDefault();
     if (user != null && document.getElementById('upload').files.length > 0) {
+
         var pkey = key; // this is from select_file.php (works fine)
         let file = document.getElementById('upload').files[0];
         try {
             // Encrypt file here
-            var file_content = await readFileAsync(file);
+            var file_content = arrayBufferToBase64(await readFileAsync(file));
 
             // Generate random AES key
-            let AES_key = await generateAESKey(); // 32-byte key for AES-256
-            var encrypted_data = await encryptAES(file_content, AES_key);
+            let AES_key = Math.random().toString(36).slice(2);
+            // encrypt data with AES key
+            var encrypted_data = CryptoJS.AES.encrypt(file_content, AES_key).toString();
 
-            let aesKeyData = await window.crypto.subtle.exportKey("jwk", AES_key);
-            let aesKeyJson = JSON.stringify(aesKeyData);
-            let encoded_key = getMessageEncoding(aesKeyJson);
+            // encrypt AES key with user public key
+            let encoded_key = getMessageEncoding(AES_key);
+            let res = await encryptMessage(pkey, encoded_key);
+            let encrypted_key = arrayBufferToBase64(res);
 
-
-            // Encrypt AES key with user public key
-            let encrypted_key = await encryptRSA(encoded_key, pkey);
-            let buffer_key = arrayBufferToBase64(encrypted_key);
-
-            // Upload encrypted data to server
-            await uploadEncryptedData(encrypted_data, buffer_key, file.type);
+            // upload encrypted data to server
+            await uploadEncryptedData(encrypted_data, encrypted_key, file.type, file.name);
             window.location.href = "select_file.php?success=1";
-
         } catch (err) {
             console.error(err);
             window.location.href = "select_file.php?success=0";
         }
     }
 };
-
-var input = document.getElementById("send");
-input.addEventListener('click', handleFileUpload);
-
-document.getElementById("cancel_button").onclick = function () {
-    location.href = "search_user.php"
-}
-
 
 var input = document.getElementById("send");
 input.addEventListener('click', handleFileUpload);

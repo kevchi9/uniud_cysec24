@@ -1,3 +1,12 @@
+function base64ToArrayBuffer(base64String) {
+    let binaryString = window.atob(base64String);
+    let byteArray = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        byteArray[i] = binaryString.charCodeAt(i);
+    }
+    return byteArray;
+}
+
 async function downloadFile(encryptedData, encryptedKey, fileType) {
     let privateKey;
     try {

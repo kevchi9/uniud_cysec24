@@ -4,12 +4,13 @@
 <html>
 
 <head>
-    <title>Project Domain - Send</title>
+    <title>Project Domain - Publish</title>
     <link rel="stylesheet" href="../style.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
 </head>
 
 <body>
+<?php include '../backend/search_user.php'; ?>
 <?php
 if (isset($_GET['success'])) {
     echo "<div id='notification_box'>";
@@ -29,40 +30,20 @@ if (isset($_GET['success'])) {
             <button id="logout_button" > Logout </button>
         </div>
     </div>
-    <form id="send_form" method="POST" enctype="multipart/form-data">
-        <p style="color: #121212">Select a file to encrypt and send to</p>
-        <p style="color: #121212"><?php echo $_SESSION['username']; ?> </p>
+    <form id="publish_form" method="POST" enctype="multipart/form-data">
+        <p>Select a file to encrypt and publish</p>
         <input type="file" id="upload" name="upload">
+        <input class="textbox" type="text" id="enc_pswd" placeholder="Encryption password" required>
         <input class="submit" type="submit" id="send" name="send" value="Send">
         <button type="button" id="cancel_button"> Cancel </button>
-        <?php 
-        $_SESSION['serialized_key'] = serialize($_SESSION['recipient_pkey']);
-        $session_value=(isset($_SESSION['serialized_key']))?$_SESSION['serialized_key']:''; 
-        preg_match('/\{[^{}]*\}/', $session_value , $matches);
-        ?>
 
         <script type="text/javascript">
-            
-            var cleaned = '<?php echo $matches[0];?>'; 
-            var keyObj = JSON.parse(cleaned);
-            var key;
-            
-            window.crypto.subtle.importKey(
-                'jwk', keyObj,
-                { name: 'RSA-OAEP', hash: { name: 'SHA-256' } }, 
-                true, ['encrypt']
-            )
-            .then(function(cryptoKey) {
-                key = cryptoKey;
-            })
-            .catch(function(error) {
-                console.error("Error while creating AES key:", error);
-            });
+
         </script>
     </form>
 </body>
 
-<script type="text/javascript" src="../js/send.js"></script>
+<script type="text/javascript" src="../js/publish.js"></script>
 <script type="text/javascript" src="../js/notification.js"></script>
 <script type="text/javascript" src="../js/logout.js"></script>
 

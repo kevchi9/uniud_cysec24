@@ -20,12 +20,20 @@ file_type TEXT NOT NULL
 );
 
 
+CREATE TABLE published_encrypted_files (
+id SERIAL PRIMARY KEY,
+encrypted_data TEXT NOT NULL,
+publisher varchar(20) NOT NULL,
+uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+CONSTRAINT foreign_publisher_key1 FOREIGN KEY (publisher) REFERENCES users(username) ON DELETE CASCADE
+);
+
 CREATE TABLE own_file (
 username varchar(20) NOT NULL,
 file varchar(100) NOT NULL, 
 CONSTRAINT own_file_primary_key PRIMARY KEY (username, file),
-CONSTRAINT foreign_user_key FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
-CONSTRAINT foreign_file_key FOREIGN KEY (file) REFERENCES encrypted_files(id) ON DELETE CASCADE
+CONSTRAINT foreign_own_file_key1 FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
+CONSTRAINT foreign_own_file_key2 FOREIGN KEY (file) REFERENCES encrypted_files(id) ON DELETE CASCADE
 );
 
 

@@ -9,10 +9,11 @@ session_start();
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
 
-if (isset($data['encryptedData']) && isset($data['encryptedKey'])) {
+if (isset($data['encryptedData']) && isset($data['encryptedKey']) && isset($data['fileType']) && isset($data['fileName']) ) {
     $encryptedData = $data['encryptedData'];
     $encryptedKey = $data['encryptedKey'];
     $fileType = $data['fileType'];
+    $fileName = $data['fileName'];
     try {
         // db connection
         $pdo = new PDO($dsn);
@@ -41,9 +42,9 @@ if (isset($data['encryptedData']) && isset($data['encryptedKey'])) {
             $pdo->beginTransaction();
             
             // update file table
-            $sql_command = 'INSERT INTO encrypted_files (encrypted_data, encrypted_key, file_type) VALUES (:encryptedData, :encryptedKey, :fileType)';
+            $sql_command = 'INSERT INTO encrypted_files (encrypted_data, encrypted_key, file_type, file_name) VALUES (:encryptedData, :encryptedKey, :fileType, :fileName)';
             $stmt = $pdo->prepare($sql_command);
-            $stmt->execute(['encryptedData' => $encryptedData, 'encryptedKey' => $encryptedKey, 'fileType' => $fileType]);
+            $stmt->execute(['encryptedData' => $encryptedData, 'encryptedKey' => $encryptedKey, 'fileType' => $fileType, 'fileName' => $fileName]);
             
             // update ownership table
             $serial = $pdo->lastInsertId();
@@ -57,7 +58,6 @@ if (isset($data['encryptedData']) && isset($data['encryptedKey'])) {
             // Risposta di successo
             error_log("Returning correctly to select_file.php after upload success.");
             echo json_encode(['message' => 'File uploaded successfully']);
-            // header('Location: ../frontend/select_file.php?success=1');
         } catch (PDOException $e) {
         // Gestisci gli errori di connessione al database
         http_response_code(500);
