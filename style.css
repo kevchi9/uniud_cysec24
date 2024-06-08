@@ -1,29 +1,36 @@
 html {
     height: 100%;
     width: 100%;
+    background-color: black;
 }
 
 body {
-    background-color: rgb(131, 172, 177);
+    background-color: black;
+    color: white;
     display: inline-block;
     font-family: Verdana, Tahoma, sans-serif;
     text-align: center;
     height: 100%;
     width: 100%;
+    font-family: "Reddit Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
 
 form {
+
     border-radius: 20px;
-    border: 20px;
+    border: 1px solid rgb(88, 88, 88);
     display: inline-block;
-    width: 30%;
-    min-width: 400px;
-    min-height: 194px;
-    height: 15%;
-    background-color: rgb(200, 204, 203);
+    width: 400px;
+    min-height: 150px;
+    background-color: black;
 }
 
 .textbox {
+    background-color: rgb(88, 88, 88);
+    color: white;
     margin-top: 15px;
     border-radius: 25px;
     border: 15px;
@@ -31,10 +38,18 @@ form {
     height: 30px;
     width: 65%;
     text-align: center;
+    font-family: "Reddit Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
 }
 
 h1 {
     min-width: 400px;
+}
+
+p {
+    color: whitesmoke;
 }
 
 #header {
@@ -44,51 +59,62 @@ h1 {
     max-height: 100px;
 }
 
-#page_title {
-    padding-left: 36%;
-    padding-right: 9%;
-    width: 25%;
+#session_header {
+    width: 15%;
+}
 
+#homepage_title {
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    width: 70%;
+}
+
+#page_title {
+    font-family: "Reddit Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+    width: 70%;
 }
 
 /* buttons */
 
 button {
-    background-color: green;
-    border: none;
-    border-radius: 20px;
+    background-color: black;
+    border: 1px solid rgb(88, 88, 88);
+    border-radius: 15px;
     color: white;
-    padding: 30px 100px;
-    margin-top: 3%;
+    width: 20%;
+    min-width: 150px;
+    max-width: 250px;
+    padding-top: 30px;
+    padding-bottom: 30px;
     margin-bottom: 3%;
     margin-left: 1.5%;
     margin-right: 1.5%;
     text-align: center;
     display: inline-block;
-    font-size: large;
-    font-family: Verdana, Tahoma, sans-serif;
+    font-family: "Reddit Mono", monospace;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
     transition: 0.1s;
 }
 
 button:hover {
-    background-color: rgb(0, 132, 255);
-
+    background-color: rgb(88, 88, 88);
 }
 
 #logout_button {
-    width: 8%;
     min-width: 100px;
     min-height: 30px;
-    background-color: rgb(255, 0, 0);
-    border-radius: 20px;
-    color: black;
+    background-color: rgb(185, 0, 0);
+    border-radius: 10px;
+    border: none;
+    color: #121212;
     padding: 0.5% 1%;
-    margin-top: 3%;
-    margin-bottom: 3%;
-    margin-left: 5%;
-    margin-right: 15%;
     text-align: center;
-    display: inline;
     font-size: large;
     font-family: Verdana, Tahoma, sans-serif;
     transition: 0.1s;
@@ -136,24 +162,14 @@ input {
     background-color: rgb(191, 206, 209);
 }
 
-.content_table {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    border: none;
-    border-radius: 20px;
-    display: inline-block;
-    align-items: center;
-    justify-content: center;
-    width: 70%;
-    height: 30%;
-    background-color: rgb(191, 206, 209);
-}
 
 .submit {
+    background-color: black;
+    color: white;
+    border: 1px solid rgb(88, 88, 88);
     margin-top: 35px;
     margin-left: 5px;
     margin-right: 5px;
-    background-color: aliceblue;
-    border: 1px solid black;
     border-radius: 15px;
     width: 30%;
     min-width: 100px;
@@ -163,7 +179,6 @@ input {
 .search_button {
     margin-top: 15px;
     border-radius: 25px;
-    border: 1px solid black;
     height: 50px;
     width: 35%;
     text-align: center;
@@ -176,7 +191,7 @@ input {
     min-width: 120px;
     padding: 1px 30px;
     font-size: 15px;
-    border: none;
+    border: 1px solid rgb(88, 88, 88);
 }
 
 .form_button {
@@ -192,9 +207,9 @@ input {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: rgb(200, 204, 203);
+    background-color: black;
     border-radius: 20px;
-    border: 20px;
+    border: 1px solid rgb(88, 88, 88);
     width: 250px;
     height: 50px;
     opacity: 1;
@@ -221,26 +236,76 @@ input {
 
 }
 
+/* 
 .content_table .download-link {
     display: inline-block;
-    /* Rendi i link blocco per occupare l'intera larghezza del contenitore */
-    padding-top: 10px;
-    padding-bottom: 10px;
-    /* Aggiungi spazio intorno ai link */
-    margin-top: 6px;
-    width: 30%;
-    /* Aggiungi spazio tra i link verticalmente */
-    background-color: green;
-    /* Colore di sfondo */
-    border-radius: 8px;
-    /* Bordi arrotondati */
-    text-decoration: none;
-    /* Rimuovi la sottolineatura dei link */
-    color: #333;
-    /* Colore del testo */
+padding-top: 10px;
+padding-bottom: 10px;
+margin-top: 6px;
+width: 30%;
+background-color: green;
+border-radius: 8px;
+text-decoration: none;
+color: #333;
 }
 
 .content_table .download-link:hover {
     background-color: rgb(0, 132, 255);
+}
+
+*/
+.content_table {
+    display: inline-block;
+    background-color: black;
+    border: 1px solid rgb(88, 88, 88);
+    border-radius: 10px;
+    width: 50%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow: auto;
+    justify-content: center;
+}
+
+#published_results {
+    visibility: hidden;
+}
+
+#table_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Stili per i link */
+.content_table .download-link {
+    display: inline-block;
+    border: 1px solid rgb(88, 88, 88);
+    width: 80%;
+    /* Rendi i link blocco per occupare l'intera larghezza del contenitore */
+    padding: 10px;
+    /* Aggiungi spazio intorno ai link */
+    margin-bottom: 10px;
+    /* Aggiungi spazio tra i link verticalmente */
+    background-color: black;
+    /* Colore di sfondo */
+    border-radius: 5px;
+    /* Bordi arrotondati */
+    text-decoration: none;
+    /* Rimuovi la sottolineatura dei link */
+    color: white;
+    /* Colore del testo */
+}
+
+.content_table .download-link:hover {
+    background-color: rgb(88, 88, 88);
     /* Cambia il colore di sfondo al passaggio del mouse */
+}
+
+/* Stile per il contenitore */
+#header,
+#inbox_table,
+#cancel_button {
+    margin: 10px;
+    /* Margine intorno agli elementi */
 }

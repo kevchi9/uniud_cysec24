@@ -7,6 +7,7 @@
     <title>Project Domain - Send</title>
     <link rel="stylesheet" href="../style.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Reddit+Mono:wght@200..900&family=Tiny5&display=swap');</style>
 </head>
 
 <body>
@@ -30,8 +31,8 @@ if (isset($_GET['success'])) {
         </div>
     </div>
     <form id="send_form" method="POST" enctype="multipart/form-data">
-        <p style="color: #121212">Select a file to encrypt and send to</p>
-        <p style="color: #121212"><?php echo $_SESSION['username']; ?> </p>
+        <p>Select a file to encrypt and send to</p>
+        <p><?php echo $_SESSION['username']; ?> </p>
         <input type="file" id="upload" name="upload">
         <input class="submit" type="submit" id="send" name="send" value="Send">
         <button type="button" id="cancel_button"> Cancel </button>

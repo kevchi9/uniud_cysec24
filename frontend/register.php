@@ -4,6 +4,8 @@
     <title>Project Domain - Login</title>
     <link rel="stylesheet" href="../style.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Reddit+Mono:wght@200..900&family=Tiny5&display=swap');</style>
+
 </head>
 <?php
 include '../backend/register.php';

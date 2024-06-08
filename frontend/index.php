@@ -3,16 +3,17 @@
 <html>
 
 <head>
-    <title>Project Domain</title>
+    <title>Home</title>
     <link rel="stylesheet" href="../style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+    <style>@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');</style>
 </head>
 
 <body>
 <div id="header">
     <div id="session_header"></div>
-    <h1 id="page_title">PoggerShare</h1>
+    <h1 id="homepage_title">SecureShare</h1>
     <div id="session_header">
         <?php echo "<p id='session_banner'>"."Logged as: ".$_SESSION['session_username']."</p>";?>
         <button id="logout_button" > Logout </button>

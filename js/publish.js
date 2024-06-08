@@ -18,7 +18,6 @@ include("https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js");
 
 async function uploadEncryptedData(encryptedData, fileName, publisher) {
 
-    // TODO: Change this URL
     let response = await fetch('/backend/publish.php', {
         method: 'POST',
         headers: {
@@ -71,8 +70,7 @@ async function handleFileUpload(e) {
         try {
             // Encrypt file here
             var file_content = arrayBufferToBase64(await readFileAsync(file));
-            console.log(file_content);
-            console.log(pswd);
+
             // encrypt data with pswd
             var encrypted_data = CryptoJS.AES.encrypt(file_content, pswd).toString();
 
