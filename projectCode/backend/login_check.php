@@ -34,7 +34,6 @@ if(isset($_POST['login']) && $_POST['login']=="Login"){
         } catch (PDOException $e) {
             // handles db connection errors
             http_response_code(500);
-            echo json_encode(['message' => 'Database error: ' . $e->getMessage()]);
             error_log("Database error: " . $e->getMessage());
         }
     } else {

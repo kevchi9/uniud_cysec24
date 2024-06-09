@@ -8,7 +8,7 @@ pswd varchar(255) NOT NULL
 
 CREATE TABLE pkey (
 username varchar(20) NOT NULL,
-pkey varchar(683) PRIMARY KEY,
+pkey TEXT PRIMARY KEY,
 CONSTRAINT foreign_pkey_key FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
@@ -18,7 +18,8 @@ id SERIAL PRIMARY KEY,
 encrypted_data TEXT NOT NULL,
 encrypted_key TEXT NOT NULL,
 uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-file_type TEXT NOT NULL
+file_type TEXT NOT NULL,
+file_name TEXT NOT NULL
 );
 
 
@@ -27,6 +28,7 @@ id SERIAL PRIMARY KEY,
 encrypted_data TEXT NOT NULL,
 publisher varchar(20) NOT NULL,
 uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+file_name TEXT NOT NULL,
 CONSTRAINT foreign_publisher_key1 FOREIGN KEY (publisher) REFERENCES users(username) ON DELETE CASCADE
 );
 
@@ -39,14 +41,14 @@ CONSTRAINT foreign_own_file_key2 FOREIGN KEY (file) REFERENCES encrypted_files(i
 );
 
 
-CREATE or REPLACE FUNCTION verify(user_name varchar(20), pswd varchar(255))
+CREATE or REPLACE FUNCTION verify(user_name varchar(20), passwd varchar(255))
 RETURNS int 
 as
 $$
 DECLARE
 verified int;
 BEGIN
-select 1 into verified from users where username=user and pswd=crypt(pswd,password);
+select 1 into verified from users where username=user_name and pswd=crypt(passwd, pswd);
 return coalesce(verified, 0);
 END;
 $$
@@ -54,7 +56,7 @@ language plpgsql;
 
 
 
-CREATE or REPLACE FUNCTION does_exists(user_name varchar(20))
+CREATE or REPLACE FUNCTION does_exist(user_name varchar(20))
 RETURNS int
 language plpgsql
 as 
