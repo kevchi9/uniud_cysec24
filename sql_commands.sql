@@ -1,13 +1,15 @@
+BEGIN;
+
 CREATE TABLE users (
 username varchar(20) NOT NULL PRIMARY KEY,
-pswd varchar(255) NOT NULL,
+pswd varchar(255) NOT NULL
 );
 
 
 CREATE TABLE pkey (
-user varchar(20) NOT NULL,
+username varchar(20) NOT NULL,
 pkey varchar(683) PRIMARY KEY,
-CONSTRAINT foreign_pkey_key FOREIGN KEY (user) REFERENCES users(username) ON DELETE CASCADE
+CONSTRAINT foreign_pkey_key FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
 
 
@@ -30,7 +32,7 @@ CONSTRAINT foreign_publisher_key1 FOREIGN KEY (publisher) REFERENCES users(usern
 
 CREATE TABLE own_file (
 username varchar(20) NOT NULL,
-file varchar(100) NOT NULL, 
+file INTEGER NOT NULL, 
 CONSTRAINT own_file_primary_key PRIMARY KEY (username, file),
 CONSTRAINT foreign_own_file_key1 FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE,
 CONSTRAINT foreign_own_file_key2 FOREIGN KEY (file) REFERENCES encrypted_files(id) ON DELETE CASCADE
@@ -65,4 +67,4 @@ return coalesce(exists, 0);
 END;
 $$;
 
-
+COMMIT;

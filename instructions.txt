@@ -1,0 +1,61 @@
+## Installazioni richieste 
+
+# apache2, apache2-utils
+sudo apt install -y apache2 apache2-utils
+
+# PostgreSQL
+sudo apt install postgresql
+
+
+## Installazione certificati OPENSSL
+
+# Una volta installato apache2:
+# Attivare SSL/TLS
+sudo a2enmod ssl
+sudo service apache2 restart
+
+# Generare i certificati e la chiave autofirmata e inserirli in /etc/ssl/
+
+nano /etc/apache2/sites-enabled/project_domain.conf
+
+# Cancellare il contenuto e incollare:
+
+<VirtualHost *:443>
+   ServerName project_domain.local
+   DocumentRoot /var/www/project_domain
+
+   SSLEngine on
+   SSLCertificateFile /etc/ssl/apache-selfsigned.crt
+   SSLCertificateKeyFile /etc/ssl/apache-selfsigned.key
+</VirtualHost>
+
+## Configurazione Database postgres
+
+# Accedere a psql con le proprie credenziali e creare il db
+psql -U postgres
+
+<inserire la password>
+
+postgres-# create database cysec;
+
+# Uscire da postgres e inizializzare il DB con il file comandi_SQL.sql
+
+psql -U -d cysec -f <path_to_file:sql_commands.sql>
+
+## Verificare lo stato di apache e postgres
+
+sudo systemctl status apache2.service
+sudo systemctl status postgresql.service
+
+# Se entrambi sono running, l'applicazione dovrebbe essere raggiungibile da 
+
+https://project_domain.local
+
+## Eventuali guide utili
+
+# apache
+https://www.digitalocean.com/community/tutorials/how-to-install-the-apache-web-server-on-ubuntu-20-04
+https://www.namecheap.com/support/knowledgebase/article.aspx/10314/33/ssl-certificate-installation-on-apache2-debian-ubuntu/
+
+# configurazione postgresql
+https://ubuntu.com/server/docs/install-and-configure-postgresql
