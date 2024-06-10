@@ -1,5 +1,8 @@
 ## Installazioni richieste 
 
+# php
+sudo apt install php php-pgsql
+
 # apache2, apache2-utils
 sudo apt install -y apache2 apache2-utils
 
@@ -16,18 +19,28 @@ sudo service apache2 restart
 
 # Generare i certificati e la chiave autofirmata e inserirli in /etc/ssl/
 
-nano /etc/apache2/sites-enabled/project_domain.conf
+nano /etc/apache2/sites-available/project_domain.conf
 
 # Cancellare il contenuto e incollare:
 
 <VirtualHost *:443>
-   ServerName project_domain.local
-   DocumentRoot /var/www/project_domain
+   ServerName project-domain.local
+   DocumentRoot /var/www/project-domain
 
    SSLEngine on
    SSLCertificateFile /etc/ssl/apache-selfsigned.crt
    SSLCertificateKeyFile /etc/ssl/apache-selfsigned.key
 </VirtualHost>
+
+# Disattivare il sito di default e attivare il nostro
+cd /etc/apache2/sites-available/
+sudo a2ensite project-domain.conf
+sudo a2dissite 000-default.conf
+sudo apache2ctl configtest
+
+# copiare il codice dell'applicazione
+sudo cp projectCode/* /var/www/project-domain/
+
 
 ## Configurazione Database postgres
 
@@ -37,6 +50,7 @@ psql -U postgres
 <inserire la password>
 
 postgres-# create database cysec;
+postgres-# create extension pgcrypto;
 
 # Uscire da postgres e inizializzare il DB con il file comandi_SQL.sql
 
