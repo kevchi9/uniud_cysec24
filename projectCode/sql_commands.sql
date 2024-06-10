@@ -43,6 +43,7 @@ CONSTRAINT foreign_own_file_key2 FOREIGN KEY (file) REFERENCES encrypted_files(i
 
 CREATE or REPLACE FUNCTION verify(user_name varchar(20), passwd varchar(255))
 RETURNS int 
+language plpgsql;
 as
 $$
 DECLARE
@@ -52,7 +53,6 @@ select 1 into verified from users where username=user_name and pswd=crypt(passwd
 return coalesce(verified, 0);
 END;
 $$
-language plpgsql;
 
 
 
